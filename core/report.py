@@ -686,7 +686,7 @@ def generate_pdf_qa_report_bytes(
                 "p95_abs_mm": "p95 Abs. Error (mm)",
                 "max_abs_mm": "Max Abs. Error (mm)",
             }
-        )[["Bank", "p95 Abs. Error (mm)", "Max Abs. Error (mm)", "Status"]]
+        )[["Bank", "p95 Abs. Error (mm)", "Max Abs. Error (mm)", "status"]]
     )
 
     summary_tbl = summary_tbl.round({"p95 Abs. Error (mm)": 3, "Max Abs. Error (mm)": 3})
