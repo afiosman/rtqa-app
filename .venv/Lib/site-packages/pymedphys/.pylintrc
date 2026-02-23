@@ -1,0 +1,56 @@
+[MASTER]
+init-hook = "import sys; sys.setrecursionlimit(2000)"
+
+[MESSAGES CONTROL]
+disable =
+    missing-docstring,
+    empty-docstring,
+    too-few-public-methods,
+    too-many-arguments,
+    too-many-locals,
+    fixme,
+    invalid-name,
+    too-many-ancestors,
+    R0801,
+    len-as-condition,
+    too-many-branches,
+    too-many-statements,
+    line-too-long,
+    too-many-instance-attributes,
+    wrong-import-order,
+    wrong-import-position,
+    ungrouped-imports,
+    import-outside-toplevel,
+    no-else-return,
+    unbalanced-tuple-unpacking,
+    raise-missing-from,
+    consider-using-with,
+    consider-using-min-builtin,
+    consider-using-max-builtin,
+    use-maxsplit-arg,
+    unused-private-member,
+    consider-using-from-import,
+    unspecified-encoding,
+    consider-using-f-string,
+    consider-iterating-dictionary,
+    use-dict-literal,
+    use-list-literal,
+    implicit-str-concat,
+    unnecessary-dunder-call,
+    unnecessary-list-index-lookup,
+    superfluous-parens,
+    used-before-assignment,
+    possibly-used-before-assignment,
+    useless-import-alias,
+
+[DESIGN]
+max-positional-arguments=20
+
+[FORMAT]
+max-line-length=88
+extension-pkg-whitelist =
+    win32file,
+    win32api,
+    pymssql,
+    numpy,
+    scipy.special,

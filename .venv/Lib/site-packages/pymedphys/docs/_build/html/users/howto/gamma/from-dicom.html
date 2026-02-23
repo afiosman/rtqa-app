@@ -1,0 +1,1003 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gamma from DICOM &#8212; PyMedPhys</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css?v=055d366d" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-26591325-7"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'UA-26591325-7');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'UA-26591325-7');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'users/howto/gamma/from-dicom';</script>
+    <link rel="canonical" href="https://docs.pymedphys.com/users/howto/gamma/from-dicom.html" />
+    <link rel="icon" href="../../../_static/pymedphys.svg"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Interpolation" href="../interp/index.html" />
+    <link rel="prev" title="The Effects of Noise on Gamma" href="effect-of-noise.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/pymedphys.svg" class="logo__image only-light" alt="PyMedPhys - Home"/>
+    <img src="../../../_static/pymedphys.svg" class="logo__image only-dark pst-js-only" alt="PyMedPhys - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../statement-of-need.html">Statement of Need</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release-notes.html">Release Notes</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Users Guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../get-started/index.html">Getting Started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../get-started/quick-start.html">Quick Start Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../get-started/cli.html">Using the CLI</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">How-to Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Gamma</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="speed-up.html">Speeding up gamma calculations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1D-from-csv.html">Gamma from 1D ASCII data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="effect-of-noise.html">The Effects of Noise on Gamma</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Gamma from DICOM</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../interp/index.html">Interpolation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../interp/implementation_comparison.html">Multilinear Interpolation Comparison</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../add-a-linac.html">Adding a Linac</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tunnels/index.html">Tunnels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tunnels/samba.html">SAMBA SSH Tunnelling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tunnels/rsync.html">Backups using rsync</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../background/index.html">Background</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../background/autocontouring.html">Automatic Contouring Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../background/elekta-logfiles.html">Elekta Logfile Decoding and Indexing</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../ref/index.html">Technical Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../ref/lib/index.html">Library Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../genindex.html">Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/lib/dicom.html">DICOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/lib/gamma.html">Gamma</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/lib/interp.html">Interpolation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/lib/mosaiq.html">Mosaiq</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/lib/metersetmap.html">MetersetMap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/lib/trf.html">TRF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/lib/electronfactors.html">Electron Cutout Factors</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../ref/lib/experimental/index.html">Experimental Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../ref/lib/experimental/pinnacle.html">Pinnacle Export Tool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ref/lib/experimental/pseudonymisation.html">Pseudonymisation Tool</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../ref/cli/index.html">CLI Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/cli/dicom.html">DICOM Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/cli/trf.html">Elekta Binary Logfiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/cli/icom.html">iCom listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/cli/pinnacle.html">Pinnacle Export Tool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref/cli/pseudonymisation.html">Pseudonymisation Tool</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributors Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../contrib/index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../contrib/info/index.html">Repository Information</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contrib/info/file-structure.html">Repository File Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contrib/info/docs-guide.html">Documentation Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contrib/info/release-guide.html">pymedphys Release Procedure</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../contrib/setups/index.html">Workstation Setup Guides</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contrib/setups/setup-win.html">Windows Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contrib/setups/setup-linux.html">Linux Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contrib/setups/setup-mac.html">MacOS Setup</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../contrib/tips/index.html">Tips &amp; Tricks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contrib/tips/add-jupyter-kernel.html">Add Jupyter kernel with <em>poetry</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contrib/tips/win-open-ssh.html">Setting up OpenSSH on Windows 10</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../contrib/dive/index.html">Deep Dive</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contrib/dive/why-open-source.html">Why Open Source?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contrib/dive/create-streamlit-exe.html">Creating a Streamlit Executable</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/pymedphys/pymedphys/main?urlpath=lab/tree/lib/pymedphys/docs/users/howto/gamma/from-dicom.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/pymedphys/pymedphys/blob/main/lib/pymedphys/docs/users/howto/gamma/from-dicom.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pymedphys/pymedphys" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pymedphys/pymedphys/edit/main/lib/pymedphys/docs/users/howto/gamma/from-dicom.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pymedphys/pymedphys/issues/new?title=Issue%20on%20page%20%2Fusers/howto/gamma/from-dicom.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/users/howto/gamma/from-dicom.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gamma from DICOM</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-the-demo-dicom-files">Getting the demo DICOM files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-and-display-gamma">Calculate and display Gamma</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-dose-and-the-gamma">Plotting the Dose and the Gamma</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="gamma-from-dicom">
+<h1>Gamma from DICOM<a class="headerlink" href="#gamma-from-dicom" title="Link to this heading">#</a></h1>
+<p>PyMedPhys has multiple ways to calculate Gamma. There are also a range of interfaces that can be used. Presented here is a simplified interface which receives as its input two DICOM file paths for the purpose of directly calculating Gamma from a pair of RT DICOM dose files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>pydicom<span class="w"> </span>pymedphys
+
+<span class="kn">import</span> <span class="nn">pydicom</span>
+<span class="kn">import</span> <span class="nn">pymedphys</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pydicom in c:\users\matth\workspace\pymedphys\.venv\lib\site-packages (2.4.4)
+Requirement already satisfied: pymedphys in c:\users\matth\workspace\pymedphys\.venv\lib\site-packages (0.41.0)
+Requirement already satisfied: setuptools in c:\users\matth\workspace\pymedphys\.venv\lib\site-packages (from pymedphys) (75.6.0)
+Requirement already satisfied: tomlkit in c:\users\matth\workspace\pymedphys\.venv\lib\site-packages (from pymedphys) (0.13.2)
+Requirement already satisfied: typing-extensions in c:\users\matth\workspace\pymedphys\.venv\lib\site-packages (from pymedphys) (4.12.2)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[notice] A new release of pip is available: 24.0 -&gt; 24.3.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+</pre></div>
+</div>
+</div>
+</div>
+<section id="getting-the-demo-dicom-files">
+<h2>Getting the demo DICOM files<a class="headerlink" href="#getting-the-demo-dicom-files" title="Link to this heading">#</a></h2>
+<p>Let’s download some demo files for the purpose of demonstrating <code class="docutils literal notranslate"><span class="pre">gamma_dicom</span></code> usage.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reference_filepath</span> <span class="o">=</span> <span class="n">pymedphys</span><span class="o">.</span><span class="n">data_path</span><span class="p">(</span><span class="s2">&quot;original_dose_beam_4.dcm&quot;</span><span class="p">)</span>
+<span class="n">reference_filepath</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WindowsPath(&#39;C:/Users/matth/.pymedphys/data/original_dose_beam_4.dcm&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evaluation_filepath</span> <span class="o">=</span> <span class="n">pymedphys</span><span class="o">.</span><span class="n">data_path</span><span class="p">(</span><span class="s2">&quot;logfile_dose_beam_4.dcm&quot;</span><span class="p">)</span>
+<span class="n">evaluation_filepath</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WindowsPath(&#39;C:/Users/matth/.pymedphys/data/logfile_dose_beam_4.dcm&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reference</span> <span class="o">=</span> <span class="n">pydicom</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">reference_filepath</span><span class="p">),</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">evaluation</span> <span class="o">=</span> <span class="n">pydicom</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">evaluation_filepath</span><span class="p">),</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">axes_reference</span><span class="p">,</span> <span class="n">dose_reference</span> <span class="o">=</span> <span class="n">pymedphys</span><span class="o">.</span><span class="n">dicom</span><span class="o">.</span><span class="n">zyx_and_dose_from_dataset</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+<span class="n">axes_evaluation</span><span class="p">,</span> <span class="n">dose_evaluation</span> <span class="o">=</span> <span class="n">pymedphys</span><span class="o">.</span><span class="n">dicom</span><span class="o">.</span><span class="n">zyx_and_dose_from_dataset</span><span class="p">(</span><span class="n">evaluation</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">z_ref</span><span class="p">,</span> <span class="n">y_ref</span><span class="p">,</span> <span class="n">x_ref</span><span class="p">)</span> <span class="o">=</span> <span class="n">axes_reference</span>
+<span class="p">(</span><span class="n">z_eval</span><span class="p">,</span> <span class="n">y_eval</span><span class="p">,</span> <span class="n">x_eval</span><span class="p">)</span> <span class="o">=</span> <span class="n">axes_evaluation</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Importantly the shape of the coordinates are in the same order as the dose axis order</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">z_ref</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(152,)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">y_ref</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(158,)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x_ref</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(254,)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">dose_reference</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(152, 158, 254)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calculate-and-display-gamma">
+<h2>Calculate and display Gamma<a class="headerlink" href="#calculate-and-display-gamma" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gamma_options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;dose_percent_threshold&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;distance_mm_threshold&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;lower_percent_dose_cutoff&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="s1">&#39;interp_fraction&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>  <span class="c1"># Should be 10 or more for more accurate results</span>
+    <span class="s1">&#39;max_gamma&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">&#39;random_subset&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;local_gamma&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;ram_available&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="o">**</span><span class="mi">29</span>  <span class="c1"># 1/2 GB</span>
+<span class="p">}</span>
+    
+<span class="n">gamma</span> <span class="o">=</span> <span class="n">pymedphys</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span>
+    <span class="n">axes_reference</span><span class="p">,</span> <span class="n">dose_reference</span><span class="p">,</span> 
+    <span class="n">axes_evaluation</span><span class="p">,</span> <span class="n">dose_evaluation</span><span class="p">,</span> 
+    <span class="o">**</span><span class="n">gamma_options</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">valid_gamma</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">gamma</span><span class="p">)]</span>
+
+<span class="n">num_bins</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;interp_fraction&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;max_gamma&#39;</span><span class="p">])</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;max_gamma&#39;</span><span class="p">],</span> <span class="n">num_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">valid_gamma</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#if density is True, y value is probability density; otherwise, it is count in a bin</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;max_gamma&#39;</span><span class="p">]])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;gamma index&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;probability density&#39;</span><span class="p">)</span>
+    
+<span class="n">pass_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">valid_gamma</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_gamma</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;local_gamma&#39;</span><span class="p">]:</span>
+    <span class="n">gamma_norm_condition</span> <span class="o">=</span> <span class="s1">&#39;Local gamma&#39;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">gamma_norm_condition</span> <span class="o">=</span> <span class="s1">&#39;Global gamma&#39;</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dose cut: </span><span class="si">{</span><span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;lower_percent_dose_cutoff&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">% | </span><span class="si">{</span><span class="n">gamma_norm_condition</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;dose_percent_threshold&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">%/</span><span class="si">{</span><span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;distance_mm_threshold&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">mm) | Pass Rate(</span><span class="se">\u03B3</span><span class="s2">&lt;=1): </span><span class="si">{</span><span class="n">pass_ratio</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% </span><span class="se">\n</span><span class="s2"> ref pts: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">z_ref</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">y_ref</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">x_ref</span><span class="p">)</span><span class="si">}</span><span class="s2"> | valid </span><span class="se">\u03B3</span><span class="s2"> pts: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">valid_gamma</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># plt.savefig(&#39;gamma_hist.png&#39;, dpi=300)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Dose cut: 20% | Local gamma (1%/1mm) | Pass Rate(γ&lt;=1): 100.00% \n ref pts: 6100064 | valid γ pts: 106910&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/e02f378a6e988b8dd983b6e53407ee313fac383cd6fff8aca12fc5b564e4597d.png" src="../../../_images/e02f378a6e988b8dd983b6e53407ee313fac383cd6fff8aca12fc5b564e4597d.png" />
+</div>
+</div>
+</section>
+<section id="plotting-the-dose-and-the-gamma">
+<h2>Plotting the Dose and the Gamma<a class="headerlink" href="#plotting-the-dose-and-the-gamma" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_ref_dose</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dose_reference</span><span class="p">)</span>
+
+<span class="n">lower_dose_cutoff</span> <span class="o">=</span> <span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;lower_percent_dose_cutoff&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">max_ref_dose</span>
+
+<span class="n">relevant_slice</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dose_reference</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">&gt;</span> 
+    <span class="n">lower_dose_cutoff</span><span class="p">)</span>
+<span class="n">slice_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">relevant_slice</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> 
+        <span class="mi">0</span><span class="p">])</span>
+<span class="n">slice_end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">relevant_slice</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> 
+        <span class="nb">len</span><span class="p">(</span><span class="n">z_ref</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_vals</span> <span class="o">=</span> <span class="n">z_ref</span><span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="n">slice_start</span><span class="p">,</span> <span class="n">slice_end</span><span class="p">,</span> <span class="mi">5</span><span class="p">)]</span>
+
+<span class="n">eval_slices</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">dose_evaluation</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">z_i</span> <span class="o">==</span> <span class="n">z_eval</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="k">for</span> <span class="n">z_i</span> <span class="ow">in</span> <span class="n">z_vals</span>
+<span class="p">]</span>
+
+<span class="n">ref_slices</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">dose_reference</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">z_i</span> <span class="o">==</span> <span class="n">z_ref</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="k">for</span> <span class="n">z_i</span> <span class="ow">in</span> <span class="n">z_vals</span>
+<span class="p">]</span>
+
+<span class="n">gamma_slices</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">gamma</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">z_i</span> <span class="o">==</span> <span class="n">z_ref</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="k">for</span> <span class="n">z_i</span> <span class="ow">in</span> <span class="n">z_vals</span>
+<span class="p">]</span>
+
+<span class="n">diffs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">eval_slice</span> <span class="o">-</span> <span class="n">ref_slice</span>
+    <span class="k">for</span> <span class="n">eval_slice</span><span class="p">,</span> <span class="n">ref_slice</span> 
+    <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">eval_slices</span><span class="p">,</span> <span class="n">ref_slices</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">max_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diffs</span><span class="p">))</span>
+
+
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">eval_slice</span><span class="p">,</span> <span class="n">ref_slice</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">gamma_slice</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">eval_slices</span><span class="p">,</span> <span class="n">ref_slices</span><span class="p">,</span> <span class="n">diffs</span><span class="p">,</span> <span class="n">gamma_slices</span><span class="p">)):</span>    
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+   
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Slice Z_</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slice_start</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="mi">5</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">c00</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+        <span class="n">x_eval</span><span class="p">,</span> <span class="n">y_eval</span><span class="p">,</span> <span class="n">eval_slice</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> 
+        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">max_ref_dose</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Evaluation&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c00</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dose (Gy)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x (mm)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y (mm)&#39;</span><span class="p">)</span>
+    
+    <span class="n">c01</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+        <span class="n">x_ref</span><span class="p">,</span> <span class="n">y_ref</span><span class="p">,</span> <span class="n">ref_slice</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> 
+        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">max_ref_dose</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Reference&quot;</span><span class="p">)</span>  
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c01</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dose (Gy)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x (mm)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y (mm)&#39;</span><span class="p">)</span>
+
+    <span class="n">c10</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+        <span class="n">x_ref</span><span class="p">,</span> <span class="n">y_ref</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> 
+        <span class="n">vmin</span><span class="o">=-</span><span class="n">max_diff</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">max_diff</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;seismic&#39;</span><span class="p">))</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Dose difference&quot;</span><span class="p">)</span>    
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c10</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;[Dose Eval] - [Dose Ref] (Gy)&#39;</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">formatter</span><span class="o">.</span><span class="n">set_powerlimits</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="c1">#use scientific notation</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x (mm)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y (mm)&#39;</span><span class="p">)</span>
+    
+    <span class="n">c11</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+        <span class="n">x_ref</span><span class="p">,</span> <span class="n">y_ref</span><span class="p">,</span> <span class="n">gamma_slice</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> 
+        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">))</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gamma_norm_condition</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;dose_percent_threshold&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> % / </span><span class="si">{</span><span class="n">gamma_options</span><span class="p">[</span><span class="s1">&#39;distance_mm_threshold&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> mm)&quot;</span><span class="p">)</span>    
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">c11</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;gamma index&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x (mm)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y (mm)&#39;</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/d20ed689a4095a83773814d59603418743129bd1e7a36182a2516f3f405a48c4.png" src="../../../_images/d20ed689a4095a83773814d59603418743129bd1e7a36182a2516f3f405a48c4.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../../_images/37ffe941b945a216467c70406e85adc737d3a965e9c53a43db6aac5eefb0df21.png" src="../../../_images/37ffe941b945a216467c70406e85adc737d3a965e9c53a43db6aac5eefb0df21.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../../_images/7d5d5738370112903abed7b58cf4a180ef0aa2862c74aa22aac3d5dda532cd84.png" src="../../../_images/7d5d5738370112903abed7b58cf4a180ef0aa2862c74aa22aac3d5dda532cd84.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../../_images/adba679ddd45195417c342caa63816e901a8b10b0934440da6c867e1c412ccd6.png" src="../../../_images/adba679ddd45195417c342caa63816e901a8b10b0934440da6c867e1c412ccd6.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../../_images/04198cf43461c1e06add2d1c764b281e8dd44fa6af8f13abaf042f035e970da6.png" src="../../../_images/04198cf43461c1e06add2d1c764b281e8dd44fa6af8f13abaf042f035e970da6.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../../_images/0c692f8e9b164218b6e0552861b9e9623150b1678bd6d5a7a3a1dafc60550820.png" src="../../../_images/0c692f8e9b164218b6e0552861b9e9623150b1678bd6d5a7a3a1dafc60550820.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<img alt="../../../_images/a8ef9747750bb1ce4892ce2c3b1d927d7856330f184829b13e40e104e59b4ad8.png" src="../../../_images/a8ef9747750bb1ce4892ce2c3b1d927d7856330f184829b13e40e104e59b4ad8.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "pymedphys/pymedphys",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./users\howto\gamma"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="effect-of-noise.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">The Effects of Noise on Gamma</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../interp/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Interpolation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-the-demo-dicom-files">Getting the demo DICOM files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-and-display-gamma">Calculate and display Gamma</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-dose-and-the-gamma">Plotting the Dose and the Gamma</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By the PyMedPhys community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2018-2021.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
