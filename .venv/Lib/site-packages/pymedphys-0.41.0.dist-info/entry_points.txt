@@ -1,0 +1,3 @@
+[console_scripts]
+pymedphys=pymedphys.__main__:main
+
