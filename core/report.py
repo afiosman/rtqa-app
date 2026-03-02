@@ -499,7 +499,6 @@ def generate_pdf_qa_report_bytes(
     _require_columns(mL, required_cols, "mL (lower)")
 
     patient_name = _get_first(mU, "Patient Name") or _get_first(mL, "Patient Name")
-    patient_id = _get_first(mU, "Patient ID") or _get_first(mL, "Patient ID")
 
     # FIX: union of BOTH banks (includes MLC1 + MLC2 if present)
     plan_name = _unique_join_two(mU, mL, "Plan Name", max_items=30)
@@ -658,7 +657,6 @@ def generate_pdf_qa_report_bytes(
         [Pk("Machine"), Pv(_safe_str(machine, default="MRIdian"))],
         [Pk("Reviewer"), Pv(reviewer)],
         [Pk("Patient Name"), Pv(patient_name)],
-        [Pk("Patient ID"), Pv(patient_id)],
         [Pk("Plan Name(s)"), Pv(plan_name)],
         [Pk("Date"), Pv(date_ymd)],
         [Pk("Gantry angles (°) — Upper Stack"), Pv(binsU_str)],
