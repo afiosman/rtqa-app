@@ -898,7 +898,7 @@ with tab_upload:
         if not uploaded:
             st.session_state["system_status"] = "ready"
             st.session_state["analysis_ready"] = False
-            st.info("No delivery logs detected. Upload at least two matching pair (upper & lower stacks) MRIdian delivery log files to continue.")
+            st.info("No delivery logs detected. Upload at least one matching Upper–Lower pair of MRIdian delivery log files to continue.")
         else:
             st.session_state["system_status"] = "parsing"
             with st.spinner("Parsing delivery logs…"):
