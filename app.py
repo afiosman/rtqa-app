@@ -839,14 +839,14 @@ else:
 # Tabs
 # =============================================================================
 tab_upload, tab_analysis, tab_reports, tab_trends = st.tabs(
-    ["📤 Upload & Intake", "📊 Analysis", "📄 Reports & Export", "📈 Longitudinal Trends"]
+    ["📤 Upload", "📊 Analysis", "📄 Reports & Export", "📈 Longitudinal Trends"]
 )
 
 # =============================================================================
-# TAB 1: UPLOAD & INTAKE
+# TAB 1: UPLOAD
 # =============================================================================
 with tab_upload:
-    st.markdown('<div class="section-title">Upload & Intake</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Upload MRIdian Delivery Logs</div>', unsafe_allow_html=True)
 
     if st.session_state.get("qa_mode") == "PF Film analysis":
         with st.container(border=True):
@@ -856,7 +856,7 @@ with tab_upload:
         st.stop()
 
     st.markdown(
-        '<div class="section-sub">Upload MRIdian delivery logs and confirm plan reference availability.</div>',
+        '<div class="section-sub">At least one matching pair of Upper and Lower delivery logs is required.</div>',
         unsafe_allow_html=True,
     )
 
@@ -864,9 +864,9 @@ with tab_upload:
 
     with left:
         with st.container(border=True):
-            st.markdown("**Delivery Log Files (.txt)**  \nSupported: ViewRay MRIdian • Upload both upper & lower stacks")
+            st.markdown("**Delivery Log Files (.txt)**  \nSupported: ViewRay MRIdian")
             uploaded = st.file_uploader(
-                "Drag files here or browse",
+                "Drag and drop Upper and Lower delivery logs here or browse",
                 type=["txt"],
                 accept_multiple_files=True,
                 key="log_uploader",
@@ -898,7 +898,7 @@ with tab_upload:
         if not uploaded:
             st.session_state["system_status"] = "ready"
             st.session_state["analysis_ready"] = False
-            st.info("No delivery logs detected. Upload at least one MRIdian delivery log file to continue.")
+            st.info("No delivery logs detected. Upload at least two matching pair (upper & lower stacks) MRIdian delivery log files to continue.")
         else:
             st.session_state["system_status"] = "parsing"
             with st.spinner("Parsing delivery logs…"):
@@ -965,9 +965,10 @@ with tab_upload:
 
             st.markdown("---")
             st.markdown("**Notes**")
-            st.caption("• Upload both upper & lower stack logs (auto-parsed).")
-            st.caption("• Click **Run analysis** in the Analysis tab to run matching + QA.")
-            st.caption("• Reports require completed analysis.")
+            st.caption("• Each gantry angle produces Upper and Lower MLC stack logs.")
+            st.caption("• A typical PF QA delivery includes four gantry angles (up to 8 logs).")
+            st.caption("• The system can parse multiple logs, but at least one Upper and one Lower log are required.")
+            st.caption("• Run analysis after required logs are detected.")
 
 # =============================================================================
 # TAB 2: ANALYSIS
